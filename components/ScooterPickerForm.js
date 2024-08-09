@@ -12,7 +12,7 @@ const initialState = {
   name: '',
 };
 
-function ScooterPickerForm({ obj }) {
+function ScooterPickerForm({ obj, setSelectedScooter }) {
   const [formInput, setFormInput] = useState(initialState);
   const [scooters, setScooters] = useState([]);
   const router = useRouter();
@@ -30,6 +30,12 @@ function ScooterPickerForm({ obj }) {
       ...prevState,
       [name]: value,
     }));
+    const selectedScooter = scooters.find((scooter) => scooter.id === value);
+    if (selectedScooter) {
+      setSelectedScooter(selectedScooter);
+    } else {
+      console.warn(`scooter with id ${value} not found`);
+    }
   };
 
   const handleSubmit = (e) => {
@@ -38,7 +44,7 @@ function ScooterPickerForm({ obj }) {
       updateScooter(formInput).then(() => router.push(`/scooters/${obj}`));
     }
   };
-  // console.log(scooters)
+
   return (
     <Form onSubmit={handleSubmit}>
       <div>
@@ -75,6 +81,7 @@ ScooterPickerForm.propTypes = {
     id: PropTypes.string,
     name: PropTypes.string,
   }),
+  setSelectedScooter: PropTypes.func.isRequired,
 };
 
 ScooterPickerForm.defaultProps = {

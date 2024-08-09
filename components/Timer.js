@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from 'react-bootstrap';
+import { PropTypes } from 'prop-types';
 
 // state to store time
-const Timer = () => {
+const Timer = ({ selectedScooter }) => {
   const [time, setTime] = useState(0); // initializes the variable time. setTime function updates time state
 
   // state to check wether the timer is running or not
@@ -32,7 +33,7 @@ const Timer = () => {
   // method to start and stop timer
   const startAndStop = () => {
     if (isRunning) {
-      setRide({ ...ride, elapsedTime: getElapsedTime() }); // this updates the ride with elapsed time ... is the spread operator
+      setRide({ ...ride, elapsedTime: getElapsedTime(), scooter: selectedScooter }); // this updates the ride with elapsed time ... is the spread operator and the scooter
     }
     setIsrunning(!isRunning);
   };
@@ -43,9 +44,11 @@ const Timer = () => {
     }
     const elapsedTime = getElapsedTime();
     const rideCost = calculateRideCost(elapsedTime.minutes + elapsedTime.seconds / 60);
-    setRide({ ...ride, elapsedTime, cost: rideCost });
+    setRide({
+      ...ride, elapsedTime, cost: rideCost, scooter: selectedScooter,
+    });
   };
-  // add another function to the end ride button to calculate the ride cost on the click and navigate to ride summary page.
+
   return (
     <div className="stopwatch-container">
       <div id="welcome-button-wrapper">
@@ -63,4 +66,12 @@ const Timer = () => {
     </div>
   );
 };
+
+Timer.propTypes = {
+  selectedScooter: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+  }).isRequired,
+};
+
 export default Timer;
